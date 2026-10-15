@@ -11,13 +11,12 @@ import {
   IconStudentViewLine,
   InstUISettingsProvider,
   Menu,
-  RadioInputGroup,
-  RadioInput,
   Text,
   View,
 } from '@instructure/ui/v11_7'
 import DesktopWrapper from './DesktopWrapper'
 import FigmaAlert from './FigmaAlert'
+import ThemeSwitcher from './ThemeSwitcher'
 import { SAMPLE_COURSE } from './sampleCourse'
 import { AppThemeContext, THEMES, useSurfaceTokens } from './appTheme'
 import type { ThemeKey } from './appTheme'
@@ -157,46 +156,14 @@ export default function App() {
           </div>
         </DesktopWrapper>
 
-        {/* Theme switcher overlay, bottom right */}
-        {/* The wrapper sets --wrapper-panel-width while a utility panel is open, so this moves left of it. */}
-        <div style={{ position: 'fixed', right: 'calc(1rem + var(--wrapper-panel-width, 0px))', bottom: 16, zIndex: 9999 }}>
-          <View
-            as="div"
-            background="primary"
-            padding="small"
-            borderWidth="small"
-            borderRadius="medium"
-            shadow="above"
-          >
-            <RadioInputGroup
-              name="theme"
-              description="Theme"
-              variant="toggle"
-              size="small"
-              value={themeKey}
-              onChange={(_e, value) => setThemeKey(value as ThemeKey)}
-            >
-              <RadioInput value="legacy" label="Legacy" />
-              <RadioInput value="light" label="Light" />
-              <RadioInput value="dark" label="Dark" />
-            </RadioInputGroup>
+        {/* Theme switcher overlay: movable and collapsible (see ThemeSwitcher.tsx) */}
+        <ThemeSwitcher themeKey={themeKey} onChange={setThemeKey}>
             {!modern && (
               <View as="div" margin="small 0 0 0">
-                <RadioInputGroup
-                  name="legacy-page"
-                  description={
-                    <Text weight="bold" size="small">
-                      Layout
-                    </Text>
-                  }
-                  size="small"
-                  value={legacyPage}
-                  onChange={(_e, value) => setLegacyPage(value as 'page' | 'course')}
-                >
-                  <RadioInput value="page" label="Page" />
-                  <RadioInput value="course" label="Course page" />
-                </RadioInputGroup>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginTop: 4 }}>
+                <Text weight="bold" size="small">
+                  Layout
+                </Text>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginTop: 10 }}>
                   <Checkbox size="small" label="Side column" checked={showLegacySide} onChange={() => setShowLegacySide((v) => !v)} />
                   <Checkbox size="small" label="Full width" checked={fullWidth} onChange={() => setFullWidth((v) => !v)} />
                 </div>
@@ -207,7 +174,7 @@ export default function App() {
                 <Text weight="bold" size="small">
                   Layout
                 </Text>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginTop: 4 }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginTop: 10 }}>
                   <Checkbox size="small" label="Filter row" checked={showFilters} onChange={() => setShowFilters((v) => !v)} />
                   <Checkbox size="small" label="Content tab list" checked={showTabList} onChange={() => setShowTabList((v) => !v)} />
                   <Checkbox size="small" label="Trailing area" checked={showTrailing} onChange={() => setShowTrailing((v) => !v)} />
@@ -215,8 +182,7 @@ export default function App() {
                 </div>
               </View>
             )}
-          </View>
-        </div>
+        </ThemeSwitcher>
       </InstUISettingsProvider>
     </AppThemeContext.Provider>
   )
